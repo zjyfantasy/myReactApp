@@ -26,7 +26,6 @@ pipeline {
         }
 
         stage('Deploy') {
-            sh 'echo "Deploying to production..."'
             steps {
                 // 这里可以添加部署步骤，例如使用 scp 或 rsync 将构建后的文件上传到服务器
                 sshPublisher(
