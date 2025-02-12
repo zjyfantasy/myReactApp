@@ -28,8 +28,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    docker exec nginx rm -rf /var/www/html/* && \
-                    docker cp dist/. nginx:/var/www/html/
+                    sudo docker exec nginx rm -rf /var/www/html/* && \
+                    sudo docker cp dist/. nginx:/var/www/html/
                 '''
             }
         }
