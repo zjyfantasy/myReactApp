@@ -27,23 +27,32 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // 这里可以添加部署步骤，例如使用 scp 或 rsync 将构建后的文件上传到服务器
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: '138.2.90.5', // 与 Jenkins 中配置的 SSH 服务器名称一致
-                            transfers: [
-                                sshTransfer(
-                                    sourceFiles: 'dist/**', // 要传输的文件（例如构建后的 dist 目录）
-                                    removePrefix: 'dist', // 移除路径前缀
-                                    remoteDirectory: '', // 远程目录（相对于配置中的 Remote Directory）
-                                    execCommand: 'echo "Deployment complete"' // 传输完成后执行的命令
-                                )
-                            ]
-                        )
-                    ]
-                )
+                sh '''
+                    docker exec nginx rm -rf /var/www/html/* && \
+                    docker cp dist/. nginx:/var/www/html/
+                '''
             }
         }
+
+        // stage('Deploy') {
+        //     steps {
+        //         // 这里可以添加部署步骤，例如使用 scp 或 rsync 将构建后的文件上传到服务器
+        //         sshPublisher(
+        //             publishers: [
+        //                 sshPublisherDesc(
+        //                     configName: '138.2.90.5', // 与 Jenkins 中配置的 SSH 服务器名称一致
+        //                     transfers: [
+        //                         sshTransfer(
+        //                             sourceFiles: 'dist/**', // 要传输的文件（例如构建后的 dist 目录）
+        //                             removePrefix: 'dist', // 移除路径前缀
+        //                             remoteDirectory: '', // 远程目录（相对于配置中的 Remote Directory）
+        //                             execCommand: 'echo "Deployment complete"' // 传输完成后执行的命令
+        //                         )
+        //                     ]
+        //                 )
+        //             ]
+        //         )
+        //     }
+        // }
     }
 }
